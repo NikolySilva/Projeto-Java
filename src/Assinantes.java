@@ -19,4 +19,16 @@ public class Assinantes {
         public Long getCpf() {
         return cpf;
     }
- 
+ //Retorna os resultados de uma forma mais legível
+
+    @Override
+    public String toString() {
+        return "Assinante{" +
+                "CPF=" + cpf +
+                ", Nome='" + nome + '\'' +
+                ", Numero=" + numero +
+                ", Numero de Chamadas=" + numChamadas +
+                '}';
+    }
+
+}
