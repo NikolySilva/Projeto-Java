@@ -1,58 +1,81 @@
-import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
+import java.text.SimpleDateFormat;
 
 public class Pospago extends Assinantes{
+    
     private float assinatura;
-    private Chamada[] chamadas;
-    private int numChamadas;
+
 
     // Construtor
-    public Pospago(long cpf, String nome, int numero,float assinatura) {
-        super(cpf, nome, numero);
+    public Pospago(long cpf, String nome, int numCelular, float assinatura) {
+        super(cpf, nome, numCelular);
         this.assinatura = assinatura;
-        this.chamadas = new Chamada[100]; // Tamanho arbitrário para o vetor de chamadas
-        this.numChamadas = 0;
+    }
+    public float getAssinatura() {
+        return assinatura;
     }
 
-    // Método para registrar uma chamada
+    public void setAssinatura(float assinatura) {
+        this.assinatura = assinatura;
+    }
+
     public void fazerChamada(GregorianCalendar data, int duracao) {
-        float custoChamada = 1.04f * duracao;
-
-        if (numChamadas < chamadas.length) {
-            // Registra a chamada (supondo que exista uma classe Chamada)
-            Chamada chamada = new Chamada(data, duracao);
-            chamadas[numChamadas] = chamada;
-            numChamadas++;
-
-            System.out.println("Chamada realizada com sucesso!");
+        if (this.chamadas.length == this.numChamadas) {
+            System.out.println("A execução da chamada não esta disponível.");
         } else {
-            System.out.println("Limite de chamadas atingido. Não foi possível realizar a chamada.");
+            for (int i = 0; i <= numChamadas; i++) {
+                if (this.chamadas[i] == null) {
+                    this.chamadas[i] = new Chamada(data, duracao);
+                }
+            }
+            this.numChamadas++;
+            System.out.println("Execução da chamada concluída com sucesso!");
         }
     }
 
-    // Método para imprimir a fatura
-    public void imprimirFaturas(int mes) {
+    public void imprimirFatura(int mes) {
+
+        float total = 0;
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-        System.out.println("Dados do assinante:");
-        // ... código para imprimir dados do assinante ...
+        System.out.println("Dados do assinante: " + this.toString());
+        System.out.println("Valor total da assinatura: " + this.assinatura);
 
-        System.out.println("Chamadas do mês " + mes + ":");
+        if (this.numChamadas <= 0) {
+            System.out.println("Chamadas Inexistentes.");
+        } else {
+            System.out.println("Dados da chamada:");
+            for (int i = 0; i < this.numChamadas; i++) {
+                if (this.chamadas[i] != null && this.chamadas[i].getData().get(GregorianCalendar.MONTH) == mes - 1) {
+                    System.out.println("Data da chamada: " + sdf.format(this.chamadas[i].getData().getTime()));
+                    System.out.println("Duração: " + this.chamadas[i].getDuracao() + " minutos;");
+                    System.out.println("Valor: R$" + this.chamadas[i].getDuracao() * 1.45);
+                    total += this.chamadas[i].getDuracao() * 1.45;
+                }
+            }
 
-        // ... código para iterar sobre chamadas do mês e imprimir os detalhes ...
+            System.out.println("\nValor total das chamadas: R$" + total);
 
-        float valorTotalFatura = calculaValorTotalFatura();
-        System.out.println("Valor total da fatura: R$ " + (assinatura + valorTotalFatura));
+            total += this.assinatura;
+            System.out.println("\nValor total da fatura no mês de " + getMes(mes) + ": R$" + total);
+        }
     }
 
-    // Método auxiliar para calcular o valor total das chamadas
-    private float calculaValorTotalFatura() {
-        float valorTotalFatura = 0;
-
-        for (int i = 0; i < numChamadas; i++) {
-            valorTotalFatura += chamadas[i].getDuracao() * 1.04f;
+    public String getMes(int opcao){
+        switch(opcao) {
+            case 1: return "Janeiro";
+            case 2: return "Fevereiro";
+            case 3: return "Março";
+            case 4: return "Abril";
+            case 5: return "Maio";
+            case 6: return "Junho";
+            case 7: return "Julho";
+            case 8: return "Agosto";
+            case 9: return "Setembro";
+            case 10: return "Outubro";
+            case 11: return "Novembro";
+            case 12: return "Dezembro";
+            default: return "Mês inválido";
         }
-
-        return valorTotalFatura;
     }
 }

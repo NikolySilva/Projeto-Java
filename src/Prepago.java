@@ -1,73 +1,126 @@
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 
+
 public class Prepago extends Assinantes {
+    private Chamada[] chamadas;
     private Recarga[] recargas;
     private int numRecargas;
     private float credito;
+    public int totaldeChamadas;
 
     // Construtor
-    public Prepago(long cpf, String nome, int numero) {
-        super(cpf, nome, numero);
-        this.recargas = new Recarga[100];
+    public Prepago(long cpf, String nome, int numCelular) {
+        super(cpf, nome, numCelular);
+        this.recargas = new Recarga[2];
+        this.chamadas = new Chamada[10];
         this.numRecargas = 0;
-        this.credito = 0;
+
     }
 
     // Método para registrar uma chamada
-    public void fazerChamada(GregorianCalendar data, int duracao) {
-        float custoChamada = 1.45f * duracao;
+    public float fazerChamada(GregorianCalendar data, int duracao) {
+        float custodaChamada = 1.45f * duracao;
 
-        if (credito >= custoChamada) {
-            credito -= custoChamada;
-
-            // Registra a chamada (supondo que exista uma classe Call)
-            Chamada chamada = new Chamada(data, duracao);
-            // ... código para adicionar chamada ao vetor de chamadas ...
-
-            System.out.println("Chamada realizada com sucesso!");
-        } else {
-            System.out.println("Créditos insuficientes para fazer a chamada.");
+        if (this.numChamadas >= this.chamadas.length){
+            System.out.println("Não há espaço para novas chamadas.");
+            return 0f;
         }
+
+        if (custodaChamada > this.credito) {
+            System.out.println("Saldo insuficiente para realizar a chamada chamada.");
+            System.out.println("Recarregue seu pré-pago.");
+            return 0f;
+        }
+
+        for (int i = 0; i <= this.numChamadas; i++){
+            if (this.chamadas[i] == null){
+                Chamada chamada = new Chamada(data, duracao);
+                this.chamadas[i] = chamada;
+                this.credito -= custodaChamada;
+                System.out.println("Chamada feita com sucesso");
+            }
+        }
+        this.numChamadas++;
+        return 1f;
     }
 
-    // Método para registrar uma recarga
-    public void recarga(GregorianCalendar data, float valor) { // Corrigido o nome do método e vetor
-        if (numRecargas < recargas.length) { // Corrigido o nome do vetor
-            // Registra a recarga (supondo que exista uma classe Recarga)
-            Recarga recarga = new Recarga(data, valor);
-            recargas[numRecargas] = recarga; // Corrigido o nome do vetor
-            numRecargas++;
-            credito += valor;
+    // Método para salvar uma recarga 
 
-            System.out.println("Recarga realizada com sucesso!");
-        } else {
-            System.out.println("Limite de recargas atingido.");
+    public void recarga(GregorianCalendar data, float valor) {
+        if (numRecargas >= this.recargas.length) {
+            System.out.println("Espaço insuficiente para recargas novas");
         }
+        else {
+
+            for (int i = 0; i <= numRecargas; i++){
+                if (recargas[i] == null){
+                    Recarga recarga = new Recarga(data, valor);
+                    this.recargas[i] = recarga;
+                    this.credito += valor;
+                    System.out.println("Recarga realizada com sucesso");
+                }
+
+            }
+
+            this.numRecargas++;
+        }
+
     }
 
     // Método para imprimir a fatura
+    
     public void imprimirFatura(int mes) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        float valortotalRecargas = 0;
+        float valortotalChamadas = 0;
 
-        System.out.println("CPF: " + cpf); // Corrigido o acesso ao CPF usando método getter
-        System.out.println("Nome: " + nome); // Corrigido o acesso ao nome usando método getter
-        System.out.println("Número: " + numero); // Corrigido o acesso ao número usando método getter
+        System.out.println("DADOS DO ASSINANTE: " + this.toString());
+        if(this.numChamadas <= 0){
+            System.out.println("Não houveram chamadas");
+        } else {
+            System.out.println("Dados da chamada:");
+            for(int j = 0; j <= this.numChamadas; j++){
+                if (this.chamadas[j] != null && this.chamadas[j].getData().get(GregorianCalendar.MONTH) == (mes - 1)) {
+                    System.out.println("Data: " + sdf.format(this.chamadas[j].getData().getTime()));
+                    System.out.println("Duração: " + this.chamadas[j].getDuracao());
+                    System.out.println("Custo: " + this.chamadas[j].getDuracao() * 1.45);
+                    valortotalChamadas+=this.chamadas[j].getDuracao()  * 1.45f;
+                }
+            }
+            System.out.println("Valor total das chamadas no mês de " + getMes(mes) + ": R$" + valortotalChamadas);
+        }
 
-        System.out.println("Chamadas e recargas do mês " + mes + ":");
+        if(this.numRecargas <= 0){
+            System.out.println("Recargas inexistentes.");
+        } else {
+            System.out.println("\n========== DADOS RECARGA ==========");
+            for(int k = 0; k <= this.numRecargas; k++){
+                if (this.recargas[k] != null && this.recargas[k].getData().get(GregorianCalendar.MONTH) == (mes - 1)) {
+                    System.out.println("\nData da recarga: " + sdf.format(this.recargas[k].getData().getTime()));
+                    System.out.println("Valor da recarga: " + this.recargas[k].getValor());
+                    valortotalRecargas+=this.recargas[k].getValor();
+                }
+            }
+            System.out.println("Valor total de recargas no mês de " + getMes(mes) + ": R$" + valortotalRecargas);
+        }
 
-        // ... código para iterar sobre chamadas e recargas do mês e imprimir os detalhes ...
-
-        System.out.println("Valor total de chamadas e recargas: " + calculaValorTotal());
-        System.out.println("Créditos disponíveis: " + credito);
     }
-
-    // Método auxiliar para calcular o valor total de chamadas e recargas
-    private float calculaValorTotal() {
-        float valorTotal = 0;
-
-        // ... código para somar os valores de chamadas e recargas ...
-
-        return valorTotal;
+    public String getMes(int opcao){
+        switch(opcao) {
+            case 1: return "Janeiro";
+            case 2: return "Fevereiro";
+            case 3: return "Março";
+            case 4: return "Abril";
+            case 5: return "Maio";
+            case 6: return "Junho";
+            case 7: return "Julho";
+            case 8: return "Agosto";
+            case 9: return "Setembro";
+            case 10: return "Outubro";
+            case 11: return "Novembro";
+            case 12: return "Dezembro";
+            default: return "Inválido";
+        }
     }
 }
