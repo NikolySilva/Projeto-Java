@@ -29,3 +29,30 @@ public class Pospago extends Assinantes{
             System.out.println("Limite de chamadas atingido. Não foi possível realizar a chamada.");
         }
     }
+
+    // Método para imprimir a fatura
+    public void imprimirFaturas(int mes) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        System.out.println("Dados do assinante:");
+        // ... código para imprimir dados do assinante ...
+
+        System.out.println("Chamadas do mês " + mes + ":");
+
+        // ... código para iterar sobre chamadas do mês e imprimir os detalhes ...
+
+        float valorTotalFatura = calculaValorTotalFatura();
+        System.out.println("Valor total da fatura: R$ " + (assinatura + valorTotalFatura));
+    }
+
+    // Método auxiliar para calcular o valor total das chamadas
+    private float calculaValorTotalFatura() {
+        float valorTotalFatura = 0;
+
+        for (int i = 0; i < numChamadas; i++) {
+            valorTotalFatura += chamadas[i].getDuracao() * 1.04f;
+        }
+
+        return valorTotalFatura;
+    }
+}
