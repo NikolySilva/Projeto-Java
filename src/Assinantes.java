@@ -27,7 +27,7 @@ public class Assinantes {
  public int getnumCelular(){
     return numCelular;
  }
-    //Retorna os resultados de uma forma mais legível
+    //Retorna os resultados de uma forma textual
 
    @Override
  public String toString() {
