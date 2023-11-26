@@ -45,3 +45,29 @@ public class Prepago extends Assinantes {
             System.out.println("Limite de recargas atingido.");
         }
     }
+
+    // Método para imprimir a fatura
+    public void imprimirFatura(int mes) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        System.out.println("CPF: " + cpf); // Corrigido o acesso ao CPF usando método getter
+        System.out.println("Nome: " + nome); // Corrigido o acesso ao nome usando método getter
+        System.out.println("Número: " + numero); // Corrigido o acesso ao número usando método getter
+
+        System.out.println("Chamadas e recargas do mês " + mes + ":");
+
+        // ... código para iterar sobre chamadas e recargas do mês e imprimir os detalhes ...
+
+        System.out.println("Valor total de chamadas e recargas: " + calculaValorTotal());
+        System.out.println("Créditos disponíveis: " + credito);
+    }
+
+    // Método auxiliar para calcular o valor total de chamadas e recargas
+    private float calculaValorTotal() {
+        float valorTotal = 0;
+
+        // ... código para somar os valores de chamadas e recargas ...
+
+        return valorTotal;
+    }
+}
