@@ -1,3 +1,3 @@
 # Projeto-Java
 
-Ana Caroline,  Nikoly Pereira
+Ana Caroline e Nikoly Pereira
