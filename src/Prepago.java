@@ -32,13 +32,13 @@ public class Prepago extends Assinantes {
     }
 
     // Método para registrar uma recarga
-    public void recarga(GregorianCalendar date, float value) { // Corrigido o nome do método e vetor
+    public void recarga(GregorianCalendar data, float valor) { // Corrigido o nome do método e vetor
         if (numRecargas < recargas.length) { // Corrigido o nome do vetor
             // Registra a recarga (supondo que exista uma classe Recarga)
-            Recarga recarga = new Recarga(date, value);
+            Recarga recarga = new Recarga(data, valor);
             recargas[numRecargas] = recarga; // Corrigido o nome do vetor
             numRecargas++;
-            credito += value;
+            credito += valor;
 
             System.out.println("Recarga realizada com sucesso!");
         } else {
