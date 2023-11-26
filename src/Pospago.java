@@ -14,4 +14,18 @@ public class Pospago extends Assinantes{
         this.numChamadas = 0;
     }
 
-  
+    // Método para registrar uma chamada
+    public void fazerChamada(GregorianCalendar data, int duracao) {
+        float custoChamada = 1.04f * duracao;
+
+        if (numChamadas < chamadas.length) {
+            // Registra a chamada (supondo que exista uma classe Chamada)
+            Chamada chamada = new Chamada(data, duracao);
+            chamadas[numChamadas] = chamada;
+            numChamadas++;
+
+            System.out.println("Chamada realizada com sucesso!");
+        } else {
+            System.out.println("Limite de chamadas atingido. Não foi possível realizar a chamada.");
+        }
+    }
